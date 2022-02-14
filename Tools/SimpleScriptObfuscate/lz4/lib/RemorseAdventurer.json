@@ -1,0 +1,87 @@
+{   "EntryScene": [ {
+          "ID": 0,
+          "Name": "EntryScene",
+          "Title": "Remorse Adventurer!",
+          "TextureDataCount": 4,
+          "ShaderDataCount": 4,
+          "DepthMin": 1,
+          "DepthMax": 3
+      }, {
+          "Camera2D": {
+            "ID": 1,
+            "Name": "Camera2D",
+            "Transform": [0, 0, 800, 460]
+          }
+      }
+  ],
+  "TitleScene": [
+  ],
+  "MainScene": [ {
+          "ID": 1,
+          "Name": "MainScene"
+        }, {
+          "Camera2D": {
+            "ID": 1,
+            "Name": "Camera2D",
+            "Transform": [0, 0, 800, 460]
+          }
+      }, {
+          "Entity": [ {
+              "ID": 2,
+              "Name": "Enemy",
+              "Image": "Assets/Graphics/Enemy.png",
+              "Transform": [0, 0, 32, 32],
+              "Position" : [32, 84],
+              "DepthLevel" : 1,
+              "State": "Idle",
+              "Component": [ {
+                   "Type": "FrameAnimation",
+                   "AnimationsKind": [ {
+                           "Name": "HorizontalLeft",
+                           "FrameRec": [ [44, 1530, 28, 36], [76, 1530, 28, 36], [0, 0, 32, 32] ],
+                           "ModeDirection": 0,
+                           "FrameSpeed": 12
+                        }
+                     ]
+                }, {
+                   "Type": "BoxCollision",
+                   "BoundingBox": [0, 16, 32, 18],
+                   "Gravity": 2
+                }
+              ]
+            }, {
+              "ID": 2,
+              "Name": "Player",
+              "Image": "Assets/Graphics/Player.png",
+              "Transform": [0, 0, 32, 32],
+              "Position" : [32, 64],
+              "DepthLevel" : 2,
+              "State": "Idle",
+              "Component": [ {
+                   "Type": "FrameAnimation",
+                   "AnimationsKind": [ {
+                           "Name": "HorizontalLeft",
+                           "FrameRec": [ [44, 140, 34, 36], [76, 140, 34, 36], [0, 0, 32, 32] ],
+                           "ModeDirection": 0,
+                           "FrameSpeed": 12
+                        }
+                     ]
+                }, {
+                   "Type": "BoxCollision",
+                   "BoundingBox": [0, 16, 32, 18],
+                   "Gravity": 2
+                }, {
+                   "Type": "Script",
+                   "Scripts": [ "Assets\\Scripts\\Player.as" ]
+                },
+                {
+                   "Type": "AudioSource",
+                   "Source": [ "Assets\\Audio\\canary.ogg" ],
+                   "Loop": "True"
+                }
+              ]
+            }
+      ]
+    }
+   ]
+}
