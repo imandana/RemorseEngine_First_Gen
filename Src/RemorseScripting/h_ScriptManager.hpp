@@ -34,6 +34,13 @@ protected:
 	void ReturnContextToPool(asIScriptContext *ctx);
 	int ExecuteCall(asIScriptContext *ctx);
 
+    void RegisterGameObject();
+    void RegisterComponent();
+    
+    void RegisterTheComponents();
+    
+    void RegisterGameManager();
+    
     void RegisterVector2f();
     void RegisterIntRect();
     void RegisterTransformable();

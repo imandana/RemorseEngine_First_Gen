@@ -56,25 +56,6 @@ int ScriptManager::Initialization()
     RegisterAudio();
     RegisterKeyboardInput();
     
-	// Register the game object. The scripts cannot create these directly, so there is no factory function.
-	r = engine->RegisterObjectType("GameObject", 0, asOBJ_REF); assert( r >= 0 );
-	r = engine->RegisterObjectBehaviour("GameObject", asBEHAVE_ADDREF, "void f()", asMETHOD(GameObject, AddRef), asCALL_THISCALL); assert( r >= 0 );
-	r = engine->RegisterObjectBehaviour("GameObject", asBEHAVE_RELEASE, "void f()", asMETHOD(GameObject, Release), asCALL_THISCALL); assert( r >= 0 );
-
-    r = engine->RegisterObjectMethod("GameObject", "Vector2f GetPosition()", asMETHOD(GameObject, GetPosition), asCALL_THISCALL); assert( r >= 0 );
-    
-    r = engine->RegisterObjectProperty("GameObject", "Transformable @ transform", offsetof(GameObject, transform)); assert( r >= 0 );
-	// The script can kill the owning object
-	/* r = engine->RegisterObjectMethod("GameObject", "void Kill()", asMETHOD(GameObject, Kill), asCALL_THISCALL); assert( r >= 0 ); */
-	
-	// The script can send a message to the other object through this method
-	// Observe the autohandle @+ to tell AngelScript to automatically release the handle after the call
-	// The generic handle type is used to allow the script to pass any object to
-	// the other script without the application having to know anything about it
-	/* r = engine->RegisterObjectMethod("GameObject", "void Send(ref msg, const GameObject @+ to)", asMETHOD(GameObject, Send), asCALL_THISCALL); assert( r >= 0 ); */
-
-
-
 	// The game engine will determine the class that represents the controller
 	// by checking if the class implements the IController interface. No methods
 	// are registered for this interface, as the script shouldn't be required to
@@ -106,6 +87,64 @@ int ScriptManager::Initialization()
 
 
 	return 0;
+}
+
+void ScriptManager::RegisterGameObject()
+{
+	// Register the game object. The scripts cannot create these directly, so there is no factory function.
+	r = engine->RegisterObjectType("GameObject", 0, asOBJ_REF); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("GameObject", asBEHAVE_ADDREF, "void f()", asMETHOD(GameObject, AddRef), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("GameObject", asBEHAVE_RELEASE, "void f()", asMETHOD(GameObject, Release), asCALL_THISCALL); assert( r >= 0 );
+
+    r = engine->RegisterObjectMethod("GameObject", "Vector2f GetPosition()", asMETHOD(GameObject, GetPosition), asCALL_THISCALL); assert( r >= 0 );
+    
+    r = engine->RegisterObjectProperty("GameObject", "Transformable @ transform", offsetof(GameObject, transform)); assert( r >= 0 );
+}
+
+void ScriptManager::RegisterComponent()
+{
+	r = engine->RegisterObjectType("Component", 0, asOBJ_REF); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Component", asBEHAVE_ADDREF, "void f()", asMETHOD(Component, AddRef), asCALL_THISCALL); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("Component", asBEHAVE_RELEASE, "void f()", asMETHOD(Component, Release), asCALL_THISCALL); assert( r >= 0 );
+
+}
+
+static void FakeAddRef(void* ptr)
+{
+}
+static void FakeReleaseRef(void* ptr)
+{
+}
+void ScriptManager::RegisterTheComponents()
+{
+    engine->RegisterObjectType("FrameAnimation", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("FrameAnimation", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("FrameAnimation", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+
+    engine->RegisterObjectType("ShaderScript", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("ShaderScript", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("ShaderScript", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+
+    engine->RegisterObjectType("Shadow2D", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("Shadow2D", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("Shadow2D", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+
+    engine->RegisterObjectType("BoxCollision", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("BoxCollision", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("BoxCollision", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+
+    engine->RegisterObjectType("SubEntities", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("SubEntities", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("SubEntities", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+
+    engine->RegisterObjectType("EntityStates", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("EntityStates", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("EntityStates", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+
+    engine->RegisterObjectType("SolidCollide", 0, asOBJ_REF);
+    engine->RegisterObjectBehaviour("SolidCollide", asBEHAVE_ADDREF, "void f()", asFUNCTION(FakeAddRef), asCALL_CDECL_OBJLAST);
+    engine->RegisterObjectBehaviour("SolidCollide", asBEHAVE_RELEASE, "void f()", asFUNCTION(FakeReleaseRef), asCALL_CDECL_OBJLAST);
+    
 }
 
 void ScriptManager::ConstructVector2f(Vector2f* ptr)
@@ -191,13 +230,6 @@ void ScriptManager::RegisterIntRect()
     new(ptr) Transformable();
 } */
 
-static void FakeAddRef(void* ptr)
-{
-}
-
-static void FakeReleaseRef(void* ptr)
-{
-}
 void ScriptManager::RegisterTransformable()
 {
     engine->RegisterObjectType("Transformable", 0, asOBJ_REF);
@@ -282,6 +314,83 @@ void ScriptManager::RegisterKeyboardInput()
     engine->RegisterEnumValue("Key", "X", Keyboard::X);
     engine->RegisterEnumValue("Key", "Y", Keyboard::Y);
     engine->RegisterEnumValue("Key", "Z", Keyboard::Z);
+
+    engine->RegisterEnumValue("Key", "Num0", Keyboard::Num0);
+    engine->RegisterEnumValue("Key", "Num1", Keyboard::Num1);
+    engine->RegisterEnumValue("Key", "Num2", Keyboard::Num2);
+    engine->RegisterEnumValue("Key", "Num3", Keyboard::Num3);
+    engine->RegisterEnumValue("Key", "Num4", Keyboard::Num4);
+    engine->RegisterEnumValue("Key", "Num5", Keyboard::Num5);
+    engine->RegisterEnumValue("Key", "Num6", Keyboard::Num6);
+    engine->RegisterEnumValue("Key", "Num7", Keyboard::Num7);
+    engine->RegisterEnumValue("Key", "Num8", Keyboard::Num8);
+    engine->RegisterEnumValue("Key", "Num9", Keyboard::Num9);
+    engine->RegisterEnumValue("Key", "Escape", Keyboard::Escape);
+    engine->RegisterEnumValue("Key", "LControl", Keyboard::LControl);
+    engine->RegisterEnumValue("Key", "LShift", Keyboard::LShift);
+    engine->RegisterEnumValue("Key", "LAlt", Keyboard::LAlt);
+    engine->RegisterEnumValue("Key", "LSystem", Keyboard::LSystem);
+    engine->RegisterEnumValue("Key", "RControl", Keyboard::RControl);
+    engine->RegisterEnumValue("Key", "RShift", Keyboard::RShift);
+    engine->RegisterEnumValue("Key", "RAlt", Keyboard::RAlt);
+    engine->RegisterEnumValue("Key", "RSystem", Keyboard::RSystem);
+    engine->RegisterEnumValue("Key", "Menu", Keyboard::Menu);
+    
+    engine->RegisterEnumValue("Key", "LBracket", Keyboard::LBracket);
+    engine->RegisterEnumValue("Key", "RBracket", Keyboard::RBracket);
+    engine->RegisterEnumValue("Key", "Semicolon", Keyboard::Semicolon);
+    engine->RegisterEnumValue("Key", "Comma", Keyboard::Comma);
+    engine->RegisterEnumValue("Key", "Period", Keyboard::Period);
+    engine->RegisterEnumValue("Key", "Quote", Keyboard::Quote);
+    engine->RegisterEnumValue("Key", "Slash", Keyboard::Slash);
+    engine->RegisterEnumValue("Key", "Backslash", Keyboard::Backslash);
+    engine->RegisterEnumValue("Key", "Tab", Keyboard::Tab);
+    engine->RegisterEnumValue("Key", "PageUp", Keyboard::PageUp);
+    engine->RegisterEnumValue("Key", "PageDown", Keyboard::PageDown);
+    engine->RegisterEnumValue("Key", "End", Keyboard::End);
+    engine->RegisterEnumValue("Key", "Home", Keyboard::Home);
+
+    
+    engine->RegisterEnumValue("Key", "Insert", Keyboard::Insert);
+    engine->RegisterEnumValue("Key", "Delete", Keyboard::Delete);
+    engine->RegisterEnumValue("Key", "Add", Keyboard::Add);
+    engine->RegisterEnumValue("Key", "Subtract", Keyboard::Subtract);
+    engine->RegisterEnumValue("Key", "Multiply", Keyboard::Multiply);
+    engine->RegisterEnumValue("Key", "Divide", Keyboard::Divide);
+    engine->RegisterEnumValue("Key", "Left", Keyboard::Left);
+    engine->RegisterEnumValue("Key", "Right", Keyboard::Right);
+    engine->RegisterEnumValue("Key", "Up", Keyboard::Up);
+    engine->RegisterEnumValue("Key", "Down", Keyboard::Down);
+    engine->RegisterEnumValue("Key", "Numpad0", Keyboard::Numpad0);
+    engine->RegisterEnumValue("Key", "Numpad1", Keyboard::Numpad1);
+    engine->RegisterEnumValue("Key", "Numpad2", Keyboard::Numpad2);
+
+    
+    engine->RegisterEnumValue("Key", "Numpad3", Keyboard::Numpad3);
+    engine->RegisterEnumValue("Key", "Numpad4", Keyboard::Numpad4);
+    engine->RegisterEnumValue("Key", "Numpad5", Keyboard::Numpad5);
+    engine->RegisterEnumValue("Key", "Numpad6", Keyboard::Numpad6);
+    engine->RegisterEnumValue("Key", "Numpad7", Keyboard::Numpad7);
+    engine->RegisterEnumValue("Key", "Numpad8", Keyboard::Numpad8);
+    engine->RegisterEnumValue("Key", "Numpad9", Keyboard::Numpad9);
+    engine->RegisterEnumValue("Key", "F1", Keyboard::Right);
+    engine->RegisterEnumValue("Key", "F2", Keyboard::Up);
+    engine->RegisterEnumValue("Key", "F3", Keyboard::Down);
+    engine->RegisterEnumValue("Key", "F4", Keyboard::Numpad0);
+    engine->RegisterEnumValue("Key", "F5", Keyboard::Numpad1);
+    engine->RegisterEnumValue("Key", "F6", Keyboard::Numpad2);
+    engine->RegisterEnumValue("Key", "F7", Keyboard::Down);
+    engine->RegisterEnumValue("Key", "F8", Keyboard::Numpad0);
+    engine->RegisterEnumValue("Key", "F9", Keyboard::Numpad1);
+    engine->RegisterEnumValue("Key", "F10", Keyboard::Numpad2);
+    engine->RegisterEnumValue("Key", "F11", Keyboard::Down);
+    engine->RegisterEnumValue("Key", "F12", Keyboard::Numpad0);
+    engine->RegisterEnumValue("Key", "F13", Keyboard::Numpad1);
+    engine->RegisterEnumValue("Key", "F14", Keyboard::Numpad2);
+    engine->RegisterEnumValue("Key", "F15", Keyboard::Down);
+    engine->RegisterEnumValue("Key", "Pause", Keyboard::Numpad0);
+    engine->RegisterEnumValue("Key", "KeyCount", Keyboard::Numpad1);
+
     
     engine->RegisterGlobalFunction("bool IsKeyPressed(Key key)", asFUNCTION(Keyboard::isKeyPressed), asCALL_CDECL);
     engine->RegisterGlobalFunction("void SetVirtualKeyboardVisible(bool value)", asFUNCTION(Keyboard::setVirtualKeyboardVisible), asCALL_CDECL);

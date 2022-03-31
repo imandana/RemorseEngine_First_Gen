@@ -27,7 +27,7 @@ int GameObject::Release()
 	}
 	return refCount;
 }
-const GameObject* GameObject::GetComponentByName(std::string name)
+const GameObject* GameObject::GetComponentByName(std::string &name)
 {
     return 0;
 }
@@ -286,7 +286,43 @@ void Entity::SetUp(simdjson::dom::element jsonData)
             
             components.push_back( tempComponent );
         }
-        
+        else if(tempName == "SubEntities"){
+            
+            Component* tempComponent =  new SubEntities();
+            SubEntities* tempSubEntities = (SubEntities*)tempComponent;
+
+            tempSubEntities->name  = tempName;
+            
+            tempSubEntities->listSubEntities = &subEntities;
+            
+            for (int j=0;j<jsonData["Component"].at(i)["SubEntities"].get_array().size(); j++)
+            {
+                subEntities.push_back(  new Entity() );
+                subEntities[ subEntities.size() -1 ]->SetUp( jsonData["Component"].at(i)["SubEntities"].at(j) );
+            }
+        } 
+        else if(tempName == "AudioSource"){
+            
+            Component* tempComponent =  new AudioSource();
+            AudioSource* tempAudioSource = (AudioSource*)tempComponent;
+
+            tempAudioSource->name  = tempName;
+
+
+        }
+        else if(tempName == "EntityStates"){
+            
+            Component* tempComponent =  new EntityStates();
+            EntityStates* tempEntityStates = (EntityStates*)tempComponent;
+
+            tempEntityStates->name  = tempName;
+            
+            for (int j=0;j<jsonData["Component"].at(i)["States"].get_array().size(); j++)
+            {
+                theEntityStates.states.push_back(  j  );
+                theEntityStates.states[ theEntityStates.states.size() -1 ]->name = jsonData["Component"].at(i)["States"].at(j).get_c_str();
+            }
+        }
         // next will phisics, frameanimation
     }
 }
@@ -295,34 +331,20 @@ void Entity::SetTextureFromPath(std::string path)
     m_texture = globalGame.assetsColl.textureColl->GetTextureData(path);
     m_sprite.setTexture(*m_texture);
 }
-const GameObject* Entity::GetComponentByName(std::string name)
+const Component* Entity::GetComponentByName(std::string &name)
 {
     for(int i=0; i < components.size(); i++)
     {
-        if(components[i]->name == name)
+        if(components[i]->name.compare( name ) == 0)
             return components[i];
     }
     return 0;
 }
 
-const GameObject* Entity::GetComponentByIndex(int idx)
+const Component* Entity::GetComponentByIndex(int idx)
 {
     return components[idx];
 }
-
-/* void Entity::TransformMove(float x, float y)
-{
-    m_position.x = x;
-    m_position.y = y;
-    
-    m_sprite.setPosition( m_position );
-    std::cout << "Entity TransformMove " << x << "\n";
-}
-
-void Entity::TransformMove(const Vector2f& vec2f)
-{
-    m_sprite.setPosition( vec2f );
-} */
 
 void Entity::Start()
 {
@@ -624,6 +646,52 @@ void BoxCollision::Execute(Entity* entity)
     
 }
 
+/* class SubEntities : public Component */
+SubEntities::SubEntities()
+{
+    
+}
+SubEntities::~SubEntities()
+{
+    
+}
+void SubEntities::Execute(Entity* entity)
+{
+    for(int i = 0; i < listSubEntities.size(); i++)
+    {
+        ////// WAIIITTT
+    }
+    
+}
+
+/* class AudioSource : public Component */
+AudioSource::AudioSource()
+{
+    
+}
+AudioSource::~AudioSource()
+{
+    
+}
+void AudioSource::Execute(Entity* entity)
+{
+    
+}
+/* class EntityStates : public Component */
+EntityStates::EntityStates()
+{
+    
+}
+EntityStates::~EntityStates()
+{
+    
+}
+void EntityStates::Execute(Entity* entity)
+{
+
+    
+}
+
 /* class Script : public Component */
 Script::Script() : type(0), factoryFunc(0), startMethod(0), updateMethod(0)
 {
@@ -639,7 +707,7 @@ void Script::Initialize(Entity* entity)
 }
 void Script::Update()
 {
-    std::cout << "SCRIPTTTT UpDTATEE \n";
+    //std::cout << "SCRIPTTTT UpDTATEE \n";
     globalGame.scriptMngr->CallUpdate(controller[0]);
 }
 void Script::Execute(Entity* entity)

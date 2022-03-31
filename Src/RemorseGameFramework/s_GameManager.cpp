@@ -45,6 +45,9 @@ void GameManager::Initialization()
   globalGame.assetsColl.textureColl = new TextureCollection( dataJson["EntryScene"].at(0)["TextureDataCount"].get_int64() );
 
   window.create(VideoMode(globalGame.screenSize.x , globalGame.screenSize.y ), title);  
+  
+  window.SetFramerateLimit(40);
+  
   globalGame.pWindow = &window;
   
   /* this would use the highest number of entity every SCENE */

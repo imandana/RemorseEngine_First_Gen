@@ -1,6 +1,7 @@
 #ifndef __GAME_FRAMEWORK_HPP__
 #define __GAME_FRAMEWORK_HPP__
 
+class Component;
 class GameObject
 {
   public:
@@ -22,8 +23,8 @@ class GameObject
       int AddRef();
       int Release();
       
-      virtual const GameObject* GetComponentByName(std::string name);   
-      virtual const GameObject* GetComponentByIndex(int idx);
+      virtual const Component* GetComponentByName(std::string &name);   
+      virtual const Component* GetComponentByIndex(int idx);
       
       /* virtual Transformable* GetTransformable(); */
       virtual Vector2f* GetPosition();
@@ -76,8 +77,8 @@ class Entity : public GameObject
         void SetUp(simdjson::dom::element jsonData);
         void SetTextureFromPath(std::string path);
         
-        const GameObject* GetComponentByName(std::string name) override;
-        const GameObject* GetComponentByIndex(int idx) override;
+        const Component* GetComponentByName(std::string &name) override;
+        const Component* GetComponentByIndex(int idx) override;
         
 /*         void TransformMove(float x, float y) override;
         void TransformMove(const Vector2f& vec2f) override; */
@@ -101,6 +102,9 @@ class Entity : public GameObject
         
         bool othersDraw = false;
         std::vector<RenderStates> othersRenderStates;
+        std::vector<Entity*> subEntities;
+        EntityStates theEntityStates;
+        
     protected:
         Sprite m_sprite;
         IntRect m_transform;
@@ -222,6 +226,45 @@ class BoxCollision : public Component
         FloatRect boundingBox;
         
         FloatRect staticBoundingBox;
+        
+        void Execute(Entity* entity) override;
+};
+
+class SubEntities : public Component
+{
+    public:
+        SubEntities();
+        ~SubEntities();
+        
+        std::vector<Entity*>* listSubEntities;
+        
+        // Component Derived
+        void Execute(Entity* entity) override;
+};
+class AudioSource : public Component
+{
+    public:
+        AudioSource();
+        ~AudioSource();
+
+        void Play(std::string &name, bool isLoop);
+        void PlayStream(std::string &name, bool isLoop);
+        
+        void Stop(std::string &name);
+        void StopAll();
+        
+        std::vector< Music > theMusics;
+        
+        void Execute(Entity* entity) override;
+};
+class EntityStates : public Component
+{
+    public:
+        EntityStates();
+        ~EntityStates();
+
+        std::vector<int> states;
+        int curState;
         
         void Execute(Entity* entity) override;
 };

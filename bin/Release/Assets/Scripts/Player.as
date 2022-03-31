@@ -46,7 +46,15 @@ class Player : IRemorseBehaviour
         {
             gameObject.transform.Move( 0, 0.4f );
         }
-        enemy.transform.Move( enemyVec );
-        enemy.transform.Rotate( 0.09f );
 	}
 }
+
+// These are the states
+enum EStates
+{
+	IDLE = 0,
+	WALK = 1,
+	SIT = 2,
+	JUMP = 3  
+}
+

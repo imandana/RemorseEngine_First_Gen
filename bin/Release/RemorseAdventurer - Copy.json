@@ -12,7 +12,8 @@
             "Name": "Camera2D",
             "Transform": [0, 0, 800, 460]
           }
-      } ],
+      }
+  ],
   "TitleScene": [
   ],
   "MainScene": [ {
@@ -33,6 +34,7 @@
               "Transform": [0, 0, 32, 32],
               "Position" : [32, 84],
               "DepthLevel" : 1,
+              "State": "Idle",
               "Component": [ {
                    "Type": "FrameAnimation",
                    "AnimationsKind": [ {
@@ -40,15 +42,14 @@
                            "FrameRec": [ [44, 1530, 28, 36], [76, 1530, 28, 36], [0, 0, 32, 32] ],
                            "ModeDirection": 0,
                            "FrameSpeed": 12
-                        } ]
+                        }
+                     ]
                 }, {
                    "Type": "BoxCollision",
                    "BoundingBox": [0, 16, 32, 18],
                    "Gravity": 2
-                }, {
-                   "Type": "EntityStates",
-                   "States": [ "Idle", "Walk", "Attack", "Sit", "Jump"]
-                } ]
+                }
+              ]
             }, {
               "ID": 2,
               "Name": "Player",
@@ -57,6 +58,7 @@
               "Transform": [0, 0, 32, 32],
               "Position" : [32, 64],
               "DepthLevel" : 2,
+              "State": "Idle",
               "Component": [ {
                    "Type": "FrameAnimation",
                    "AnimationsKind": [ {
@@ -64,51 +66,28 @@
                            "FrameRec": [ [44, 140, 34, 36], [76, 140, 34, 36], [0, 0, 32, 32] ],
                            "ModeDirection": 0,
                            "FrameSpeed": 12
-                        } ]
+                        }
+                     ]
                 }, {
                    "Type": "BoxCollision",
                    "BoundingBox": [0, 16, 32, 18],
                    "Gravity": 2
                 }, {
-                   "Type": "SubEntities",
-                   "Entities": [ {
-                            "Name": "PunchArea",
-                            "IsActive": 0,
-                            "Image": "Assets/Graphics/Player.png",
-                            "Transform": [0, 0, 0, 0],
-                            "Position" : [32, 64],
-                            "DepthLevel" : 2,
-                            "Component": [ {
-                                   "Type": "BoxCollision",
-                                   "BoundingBox": [0, 16, 32, 18],
-                                   "Gravity": 2      
-                            } ]
-                       }, {
-                            "Name": "KickArea",
-                            "IsActive": 0,
-                            "Image": "Assets/Graphics/Player.png",
-                            "Transform": [0, 0, 0, 0],
-                            "Position" : [32, 64],
-                            "DepthLevel" : 2,
-                            "Component": [ {
-                                   "Type": "BoxCollision",
-                                   "BoundingBox": [0, 16, 32, 18],
-                                   "Gravity": 2
-                            } ]
-                       } ]
-                },  {
-                   "Type": "EntityStates",
-                   "States": [ "Idle", "Walk", "Sit", "Jump", "Punch", "Kick", "Skill1", "Skill2"],
-                   "State": 0
+                   "Type": "CustomBoxCollisions",
+                   "BoundingBox": [ [0, 0, 6, 6], [3, 3, 6, 6] ],
+                   "Gravity": 2
                 }, {
                    "Type": "Script",
                    "Scripts": [ "Assets\\Scripts\\Player.as" ]
                 },
                 {
                    "Type": "AudioSource",
-                   "Source": [ "Assets\\Audio\\canary.ogg", "Assets\\Audio\\ding.flac"  ],
+                   "Source": [ "Assets\\Audio\\canary.ogg" ],
                    "Loop": "True"
-                } ]
-            } ]
-    } ]
+                }
+              ]
+            }
+      ]
+    }
+   ]
 }
