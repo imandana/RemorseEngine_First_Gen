@@ -149,6 +149,9 @@ void GameManager::Initialization()
     // StartData , and Initialize component
     for(int i=0; i < pEntity.size(); i++ ){
             pEntity[i]->Start();
+            
+            // dipake buat draworder activeEntities
+            pEntity[i]->drawId = i;
     };
     std::cout << "Start Initialize" << entity.size() << std::endl; 
     drawOrder.SetEntity( &pEntity );

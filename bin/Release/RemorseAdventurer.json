@@ -27,6 +27,7 @@
       }, {
           "Entity": [ {
               "ID": 2,
+              "DrawID": 0,
               "Name": "Enemy",
               "IsActive": 1,
               "Image": "Assets/Graphics/Enemy.png",
@@ -51,6 +52,7 @@
                 } ]
             }, {
               "ID": 2,
+              "DrawID": 0,
               "Name": "Player",
               "IsActive": 1,
               "Image": "Assets/Graphics/Player.png",

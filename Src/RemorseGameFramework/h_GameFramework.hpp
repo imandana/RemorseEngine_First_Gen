@@ -9,6 +9,8 @@ class GameObject
       virtual ~GameObject();
   
       int id;
+      int drawId;
+      
       unsigned int thisClassSize;
       std::string name;
       std::string objName;
@@ -16,15 +18,16 @@ class GameObject
       Transformable* transform;
       
       int refCount;
-      
-/*       virtual void TransformMove(float x, float y);
-      virtual void TransformMove(const Vector2f& vec2f); */
-      
+  
       int AddRef();
       int Release();
       
+      bool isActive;
+      
       virtual const Component* GetComponentByName(std::string &name);   
       virtual const Component* GetComponentByIndex(int idx);
+      
+      virtual void SetActive( bool active );  
       
       /* virtual Transformable* GetTransformable(); */
       virtual Vector2f* GetPosition();
@@ -329,6 +332,11 @@ class DrawOrders
      
     std::vector<Entity*>* entitiesArray;
     
+    std::vector<int> activeEntities;
+    std::vector<int> inactiveEntities;
+    
+    void SwapInActiveEntity();
+    
     void SetEntity(std::vector<Entity*>* pEntity);
     void Update( float* time ); 
     void Draw(RenderWindow* window);
@@ -376,6 +384,8 @@ static class GlobalGamePointer
     
     // Global Variable
     std::vector<Entity*> getEntity;
+    
+    std::vector<int>* activeEntities;
     
     RenderWindow* pWindow;
     Vector2i screenSize;

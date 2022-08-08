@@ -35,6 +35,28 @@ const GameObject* GameObject::GetComponentByIndex(int idx)
 {
     return 0;
 }
+void GameObject::SetActive( bool active )
+{
+    if( active == isActive)
+        return;
+    
+    isActive = active;
+    if( active )
+    {
+        globalGame->activeEntities.push_back( drawId );
+        return;
+    }
+    
+    // if set active false
+    int tempId = drawId;
+    
+    globalGame->activeEntities[ drawId ] = globalGame->activeEntities.back();
+    /// Sabar liat dikertas nanti ya...
+    
+    
+    
+    globalGame->activeEntities.pop_back();
+}
 /* Transformable* GameObject::GetTransformable()
 {
     return 0;
@@ -79,6 +101,8 @@ void Entity::SetUp(simdjson::dom::element jsonData)
     
     temp = jsonData["Name"].get_c_str();
     name = temp;
+    
+    isActive = jsonData["IsActive"].get_int64();
     
     std::cout<< name << std::endl;
     
@@ -787,15 +811,55 @@ DrawOrders::~DrawOrders()
 {
     
 }
+void DrawOrders::SwapInActiveEntity()
+{
+    
+}
 void DrawOrders::SetEntity(std::vector<Entity*>* pEntity)
 {
     entitiesArray = pEntity;
+    
+    activeEntities.reserve( entitiesArray.size() );
+    
+    for(int i=0; i< entitiesArray->size(); i++)
+    { 
+        activeEntities.push_back( i );
+    }
+    
+    globalGame.activeEntities = &activeEntities;
 }
 void DrawOrders::Update( float* time )
 {
     Entity* temp = entitiesArray->at(0);
+    int drawIdTemp = 0;
     
     temp->Update( time );
+    
+    // Gonna replace with this, test
+    for(int i=1; i< activeEntities->size() ; i++)
+    { 
+        entitiesArray->at(i)->Update( time );
+
+        if((temp->GetPosition()->y + temp->GetIntRect()->height) > (entitiesArray->at(i)->GetPosition()->y + entitiesArray->at(i)->GetIntRect()->height) && 
+                                    temp->GetPosition()->y != 0  &&
+                                    temp->depthLevel >=  entitiesArray->at(i)->depthLevel )
+        {
+            entitiesArray->at(i-1) = entitiesArray->at(i);
+            entitiesArray->at(i) = temp;
+            
+            /////
+            entitiesArray->at(i-1).drawId = i;
+            entitiesArray->at(i).drawId = drawIdTemp;
+        }
+        temp = entitiesArray->at(i);
+        
+        //////
+        drawIdTemp = i ;
+    }
+    //
+    
+    ////////////////////////////////////////////////////
+    /*
     for(int i=1; i< entitiesArray->size() ; i++)
     { 
         entitiesArray->at(i)->Update( time );
@@ -809,9 +873,17 @@ void DrawOrders::Update( float* time )
         }
         temp = entitiesArray->at(i);
     }
+    
+    */
 }
 void DrawOrders::Draw(RenderWindow* window)
 {
+    for(int i=0; i< entitiesArray->size(); i++)
+    { 
+        /* window->draw( *entitiesArray->at(i)->GetSprite() ); */
+        entitiesArray->at(i)->Draw( window );
+    }
+    
     for(int i=0; i< entitiesArray->size(); i++)
     { 
         /* window->draw( *entitiesArray->at(i)->GetSprite() ); */
