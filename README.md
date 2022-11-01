@@ -15,7 +15,11 @@ Very Early Remorse Engine Editor
 # 3D Support
 - After 2D finished may be for basic 2D, im going to support 3D.
 
-# Platform
+# Editor Platform
+- Windows
+- Android
+
+# Target Platform
 - Windows - currently
 - WebGL
 - Linux
