@@ -12,8 +12,17 @@ Very Early Remorse Engine Editor
 - Lua         (Planned After AngelScript)
 - TypeScript  (Panned)
 
+# 2D Feature
+- World Editor      (WP)
+- Character Editor  (WP)
+- Frame Animation   (WP)
+- Vertex Animation  (Maybe using DragonBone)
+- wait
+- wait
+- wait
+
 # 3D Support
-- After 2D finished may be for basic 2D, im going to support 3D.
+- After 2D finished may be for basic 2D and the feature, im going to support 3D.
 
 # Editor Platform
 - Windows
