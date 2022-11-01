@@ -17,6 +17,7 @@ Very Early Remorse Engine Editor
 
 # Platform
 - Windows - currently
+- WebGL
 - Linux
 - Android
 - Nintendo ( Switch, etc )
